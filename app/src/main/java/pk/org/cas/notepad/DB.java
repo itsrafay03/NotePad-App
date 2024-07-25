@@ -37,6 +37,7 @@ public class DB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(Notes.CREATE_TABLE);
         db.execSQL(User.CREATE_TABLE);
+        db.execSQL(Favourite.CREATE_TABLE);
     }
 
     @Override
@@ -45,9 +46,11 @@ public class DB extends SQLiteOpenHelper {
         if((oldVersion != newVersion)){
             db.execSQL(Notes.DROP_TABLE);
             db.execSQL(Notes.CREATE_TABLE);
+            db.execSQL(Favourite.CREATE_TABLE);
 
             db.execSQL(User.DROP_TABLE);
             db.execSQL(User.CREATE_TABLE);
+            db.execSQL(Favourite.CREATE_TABLE);
         }
     }
 
@@ -109,6 +112,72 @@ public class DB extends SQLiteOpenHelper {
         }
         cursor.close();
         return notes;
+    }
+
+
+
+
+
+
+
+    // Crude Operations of Note.
+    public boolean insertFavourite(Favourite favourite){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Favourite.COL_TITLE, favourite.getTitle());
+        contentValues.put(Favourite.COL_NOTE, favourite.getNote());
+        long rowID;
+        try {
+            rowID = db.insert(Favourite.TABLE_NAME, null, contentValues);
+        }catch (Exception ex){
+            return false;
+        }
+        return rowID != -1;
+    }
+
+    public boolean updateFavourite(Favourite favourite){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Favourite.COL_TITLE, favourite.getTitle());
+        contentValues.put(Favourite.COL_NOTE, favourite.getNote());
+        long rowID;
+        try{
+            rowID = db.update(Favourite.TABLE_NAME, contentValues, Notes.COL_NOTE_ID+"= ?", new String[]{String.valueOf(favourite.getNoteId())});
+        }catch (Exception ex){
+            return false;
+        }
+        return rowID != -1;
+    }
+
+    public boolean deleteFavourite(int noteId){
+        SQLiteDatabase db = getWritableDatabase();
+        long rowId;
+        try {
+            rowId = db.delete(Favourite.TABLE_NAME, Favourite.COL_NOTE_ID+" = ? ", new String[]{String.valueOf(noteId)});
+        }catch (Exception ex){
+            return false;
+        }
+        return rowId != -1;
+    }
+
+    public List<Favourite> fetchFavourite(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(Favourite.SELECT_ALL_NOTES, null);
+        List<Favourite> favourites = new ArrayList<>(cursor.getCount());
+        if(cursor.moveToFirst()){
+            do{
+                Favourite favourite = new Favourite();
+                int index = cursor.getColumnIndex(Favourite.COL_NOTE_ID);
+                favourite.setNoteId(cursor.getInt(index));
+                index = cursor.getColumnIndex(Notes.COL_TITLE);
+                favourite.setTitle(cursor.getString(index));
+                index = cursor.getColumnIndex(Notes.COL_NOTE);
+                favourite.setNote(cursor.getString(index));
+                favourites.add(favourite);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return favourites;
     }
 
 
