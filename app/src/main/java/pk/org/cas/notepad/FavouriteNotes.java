@@ -1,6 +1,7 @@
 package pk.org.cas.notepad;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,8 +20,8 @@ import java.util.List;
 public class FavouriteNotes extends AppCompatActivity {
     ImageView ivBack;
     RecyclerView rvFav;
-    NotesAdapter notesAdapter;
-    OpenNote openNoteRef = new OpenNote();
+    FavouriteAdapter favouriteAdapter;
+    DB db = DB.getInstance(this);
 
     public static List<Notes> favNotesList = new ArrayList<>();
 
@@ -33,16 +34,39 @@ public class FavouriteNotes extends AppCompatActivity {
         ivBack = findViewById(R.id.ivBackFav);
 
 
-        notesAdapter = new NotesAdapter(favNotesList);
-        rvFav.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        rvFav.setAdapter(notesAdapter);
-        rvFav.setHasFixedSize(true);
+        refreshFavRecyclerView();
+
 
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshFavRecyclerView();
+    }
+
+
+    public void refreshFavRecyclerView(){
+        favouriteAdapter = new FavouriteAdapter(db.fetchFavourite());
+        rvFav.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rvFav.setAdapter(favouriteAdapter);
+        rvFav.setHasFixedSize(true);
+        favouriteAdapter.setOnItemClickListener(new FavouriteAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(FavouriteAdapter.FavpuriteViewHolder holder, int position) {
+                List<Favourite> favourites = db.fetchFavourite();
+                Intent intent = new Intent(FavouriteNotes.this, OpenFavNotes.class);
+                intent.putExtra("Position", position);
+                intent.putExtra("Title", favourites.get(position).getTitle());
+                intent.putExtra("Note", favourites.get(position).getNote());
+                startActivity(intent);
             }
         });
     }

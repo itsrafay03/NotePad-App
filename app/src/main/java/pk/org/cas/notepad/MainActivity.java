@@ -153,7 +153,18 @@ public class MainActivity extends AppCompatActivity {
         tvUserName = headerView.findViewById(R.id.tvUsername);
         tvEmail = headerView.findViewById(R.id.tvEmail);
 
-//        String name = db.fetchLastUser().getName().toString();
+
+        try {
+            List<User> users = db.fetchUsers();
+            User user = users.get(0);
+            tvUserName.setText(user.getName());
+            tvEmail.setText(user.getEmail());
+            ivProfilePic.setImageBitmap(user.getProfilePic());
+        }catch (Exception ex){
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+//        String name = db..getName().toString();
 //        String email = db.fetchLastUser().getEmail().toString();
 //        tvUserName.setText(name);
 //        tvEmail.setText(email);

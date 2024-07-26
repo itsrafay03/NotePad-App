@@ -37,7 +37,6 @@
                 app:titleTextColor="@color/white"
                 app:titleTextAppearance="@style/TextAppearance.Material3.HeadlineMedium"
                 android:layout_marginStart="40dp"/>
-
         </RelativeLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

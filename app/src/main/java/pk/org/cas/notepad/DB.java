@@ -17,7 +17,7 @@ import java.util.List;
 public class DB extends SQLiteOpenHelper {
     private static DB instance;
     public static final String DB_NAME = "NOTEPAD";
-    public static final int DB_VERSION = 9;
+    public static final int DB_VERSION = 13;
 
 
 
@@ -46,11 +46,13 @@ public class DB extends SQLiteOpenHelper {
         if((oldVersion != newVersion)){
             db.execSQL(Notes.DROP_TABLE);
             db.execSQL(Notes.CREATE_TABLE);
-            db.execSQL(Favourite.CREATE_TABLE);
 
             db.execSQL(User.DROP_TABLE);
             db.execSQL(User.CREATE_TABLE);
+
+            db.execSQL(Favourite.DROP_TABLE);
             db.execSQL(Favourite.CREATE_TABLE);
+
         }
     }
 
@@ -116,10 +118,6 @@ public class DB extends SQLiteOpenHelper {
 
 
 
-
-
-
-
     // Crude Operations of Note.
     public boolean insertFavourite(Favourite favourite){
         SQLiteDatabase db = getWritableDatabase();
@@ -142,12 +140,13 @@ public class DB extends SQLiteOpenHelper {
         contentValues.put(Favourite.COL_NOTE, favourite.getNote());
         long rowID;
         try{
-            rowID = db.update(Favourite.TABLE_NAME, contentValues, Notes.COL_NOTE_ID+"= ?", new String[]{String.valueOf(favourite.getNoteId())});
+            rowID = db.update(Favourite.TABLE_NAME, contentValues, Favourite.COL_NOTE_ID+"= ?", new String[]{String.valueOf(favourite.getNoteId())});
         }catch (Exception ex){
             return false;
         }
         return rowID != -1;
     }
+
 
     public boolean deleteFavourite(int noteId){
         SQLiteDatabase db = getWritableDatabase();
@@ -169,9 +168,9 @@ public class DB extends SQLiteOpenHelper {
                 Favourite favourite = new Favourite();
                 int index = cursor.getColumnIndex(Favourite.COL_NOTE_ID);
                 favourite.setNoteId(cursor.getInt(index));
-                index = cursor.getColumnIndex(Notes.COL_TITLE);
+                index = cursor.getColumnIndex(Favourite.COL_TITLE);
                 favourite.setTitle(cursor.getString(index));
-                index = cursor.getColumnIndex(Notes.COL_NOTE);
+                index = cursor.getColumnIndex(Favourite.COL_NOTE);
                 favourite.setNote(cursor.getString(index));
                 favourites.add(favourite);
             }while (cursor.moveToNext());
@@ -217,7 +216,6 @@ public class DB extends SQLiteOpenHelper {
         contentValues.put(User.COL_NAME, user.getName());
         contentValues.put(User.COL_EMAIL, user.getEmail());
         contentValues.put(User.COL_PROFILE_PIC, getBytes(user.getProfilePic()));
-
 
 
 //        Bitmap imageToStoreBitmap = user.getProfilePic();
@@ -311,16 +309,12 @@ public class DB extends SQLiteOpenHelper {
     // convert from bitmap to byte array
     public static byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
     // convert from byte array to bitmap
     public static Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
-
-
-
-
 
 }
