@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         try {
+
             List<User> users = db.fetchUsers();
             User user = users.get(0);
             tvUserName.setText(user.getName());
