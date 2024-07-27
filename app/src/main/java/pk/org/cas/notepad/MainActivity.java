@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -69,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         ivmenu = findViewById(R.id.ivMenu);
         navigationView = findViewById(R.id.navigationView);
         notes = db.fetchNotes();
-
 
 
         refreshRecyclerView();
@@ -164,7 +164,12 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if(menuItem.getItemId() == R.id.nav_logout) {
-                    Toast.makeText(MainActivity.this, "You are Logout from NotePad App", Toast.LENGTH_SHORT).show();
+                     List<User> users1 = db.fetchUsers();
+                    if(users1.size() > 0) {
+                        int userId = users1.get(0).getUserId();
+                        db.deleteUser(userId);
+                    }
+                    Toast.makeText(MainActivity.this, "Logged Out Successfully.", Toast.LENGTH_SHORT).show();
                 }
                 closeDrawer(drawerLayout);
                 return true;
@@ -186,14 +191,6 @@ public class MainActivity extends AppCompatActivity {
             tvEmail.setText(user.getEmail());
             ivProfilePic.setImageBitmap(user.getProfilePic());
         }
-
-//        User user = users.get(0);
-//        tvUserName.setText(user.getName());
-//        tvEmail.setText(user.getEmail());
-//        Toast.makeText(this, ""+user.getProfilePic(), Toast.LENGTH_LONG).show();
-//        ivProfilePic.setImageBitmap(user.getProfilePic());
-        invalidateOptionsMenu();
-
     }
 
 
@@ -276,6 +273,10 @@ public class MainActivity extends AppCompatActivity {
             tvUserName.setText(user.getName());
             tvEmail.setText(user.getEmail());
             ivProfilePic.setImageBitmap(user.getProfilePic());
+        }else{
+            tvUserName.setText("UserName");
+            tvEmail.setText("Email");
+            ivProfilePic.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.person));
         }
     }
 

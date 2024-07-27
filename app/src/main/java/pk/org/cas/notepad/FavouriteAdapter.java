@@ -9,7 +9,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.FavpuriteViewHolder>{
 
@@ -34,7 +38,10 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favp
         Favourite favourite = favourites.get(position);
         holder.tvTitle.setText(favourite.getTitle());
         holder.tvNote.setText(favourite.getNote());
-        holder.tvDate.setText(favourite.getDate());
+
+        DateFormat df = new SimpleDateFormat("HH:mm:ss a, dd/MM/yyyy", Locale.getDefault());
+        String currentDateAndTime = df.format(new Date());
+        holder.tvDate.setText(currentDateAndTime);
     }
 
     @Override

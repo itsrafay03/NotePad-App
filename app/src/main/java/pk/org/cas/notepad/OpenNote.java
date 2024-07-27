@@ -49,7 +49,6 @@ public class OpenNote extends AppCompatActivity {
         List<Notes> notes = db.fetchNotes();
         NotesAdapter notesAdapter = new NotesAdapter(notes);
 
-        List<Favourite> favouriteList = db.fetchFavourite();
 
         Intent intent = getIntent();
         int position = intent.getIntExtra("Position",-1);
@@ -133,40 +132,25 @@ public class OpenNote extends AppCompatActivity {
                 Favourite favourite = new Favourite(id, title, note);
                 if(isNotFavourite){
                     ivFav.setImageResource(R.drawable.favourite);
-//                    favouriteNotesList.add(notes1);
-                    if (db.insertFavourite(favourite)){
-                        if (db.deleteNote(notes1.getNoteId())){
+                    if (db.deleteNote(notes1.getNoteId())){
+                        if ((!(notes.contains(note))) && (db.insertFavourite(favourite))){
                             Toast.makeText(OpenNote.this, "Note Added to Favourites Successfully.", Toast.LENGTH_LONG).show();
                         }else{
-                            Toast.makeText(OpenNote.this, "Note is inserted to favourite but not deleted from MainHome.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(OpenNote.this, "Note is deleted from MainHome but not inserted to Favourite.", Toast.LENGTH_LONG).show();
                         }
                     }
                     isNotFavourite = false;
-                }
-                if(isNotFavourite == false){
+                }else {
+                    List<Favourite> favouriteList = db.fetchFavourite();
                     ivFav.setImageResource(R.drawable.favourites);
-                    Toast.makeText(OpenNote.this, "Position : "+position, Toast.LENGTH_SHORT).show();
+                    if (db.deleteFavourite((favouriteList.get(favouriteList.size()-1).getNoteId()))){
+                        Toast.makeText(OpenNote.this, "Note Removed from Favourites.", Toast.LENGTH_SHORT).show();
+                        if(db.insertNote(notes1)){
+                            Toast.makeText(OpenNote.this, "Note is Added back to MainHome", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
 
-
-//                    if (db.deleteFavourite(favourite.getNoteId())){
-//                        Toast.makeText(OpenNote.this, "Note Removed from Favourites Successfully.", Toast.LENGTH_SHORT).show();
-//                    }
-
-//                    if (db.insertNote(notes1)){
-//                        Toast.makeText(OpenNote.this, "Position : "+position, Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(OpenNote.this, "Title:  "+favouriteList.get(favouriteList.size()-1).getTitle(), Toast.LENGTH_SHORT).show();
-//                        if(favouriteList.contains(favourite)){
-//                            Toast.makeText(OpenNote.this, String.valueOf(favouriteList.contains(favourite)), Toast.LENGTH_SHORT).show();
-//                            if (db.deleteFavourite(favouriteList.get(favouriteList.size()-1).getNoteId())){
-//                                Toast.makeText(OpenNote.this, "Note Removed from Favourites Successfully.", Toast.LENGTH_SHORT).show();
-//                            }else{
-//                                Toast.makeText(OpenNote.this, "Note is inserted to MainHome but not deleted from Favourite.", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }else {
-//                            Toast.makeText(OpenNote.this, "Note is not in Favourites.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
                     isNotFavourite = true;
                 }
             }

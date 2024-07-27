@@ -17,8 +17,7 @@ import java.util.List;
 public class DB extends SQLiteOpenHelper {
     private static DB instance;
     public static final String DB_NAME = "NOTEPAD";
-    public static final int DB_VERSION = 21;
-
+    public static final int DB_VERSION = 25;
 
     private DB(Context context){
         super(context, DB_NAME, null, DB_VERSION);

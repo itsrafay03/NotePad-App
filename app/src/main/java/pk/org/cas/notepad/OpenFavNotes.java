@@ -116,19 +116,18 @@ public class OpenFavNotes extends AppCompatActivity {
         ivFavFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isFavourite){
+                if(isFavourite) {
                     ivFavFav.setImageResource(R.drawable.favourites);
-//                    int id = (favouriteNotes.get(position).getNoteId());
-//                    String title = String.valueOf(etFavOpen_Title.getText());
-//                    String note = String.valueOf(etFavOpen_Note.getText());
-//                    Notes notes = new Notes(id,title, note);
-//                    Favourite favourite = new Favourite(id, title, note);
-//                    db.insertNote(notes);
-//                    db.deleteFavourite(favourite.getNoteId());
-//                    Toast.makeText(OpenFavNotes.this, "Note Removed from Favourites.", Toast.LENGTH_SHORT).show();
-//                    isFavourite = false;
-                }else {
-
+                    int id = (favouriteNotes.get(position).getNoteId());
+                    String title = String.valueOf(etFavOpen_Title.getText());
+                    String note = String.valueOf(etFavOpen_Note.getText());
+                    Notes notes = new Notes(id, title, note);
+                    Favourite favourite = new Favourite(id, title, note);
+                    db.insertNote(notes);
+                    db.deleteFavourite(favourite.getNoteId());
+                    Toast.makeText(OpenFavNotes.this, "Note Removed from Favourites and Added to Home.", Toast.LENGTH_SHORT).show();
+                    isFavourite = false;
+                    finish();
                 }
             }
         });
