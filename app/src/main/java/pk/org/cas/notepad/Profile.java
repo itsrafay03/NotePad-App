@@ -62,36 +62,16 @@ public class Profile extends AppCompatActivity {
             public void onClick(View view) {
                 String name = etName.getText().toString();
                 String email = etEmail.getText().toString();
-                if(imageToStore == null){
-                    Toast.makeText(Profile.this, "Null", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(Profile.this, "Not Null", Toast.LENGTH_SHORT).show();
-                }
-
                 User user = new User(name, email, imageToStore);
-                if(db.insertUser(user)){
+                List<User> users = db.fetchUsers();
+                if(users.size() > 0){
+                    user.setUserId(users.get(0).getUserId());
+                    db.updateUser(user);
+                    Toast.makeText(Profile.this, "Profile Updated.", Toast.LENGTH_SHORT).show();
+                }else{
+                    db.insertUser(user);
                     Toast.makeText(Profile.this, "Profile Saved.", Toast.LENGTH_SHORT).show();
                 }
-
-
-
-
-//                if(db.fetchUsers().isEmpty()){
-//                    User user = new User(name, email, imageToStore);
-//                    if(db.insertUser(user)){
-//                        Toast.makeText(Profile.this, "Profile Saved.", Toast.LENGTH_SHORT).show();
-//                    }else{
-//                        Toast.makeText(Profile.this, "Not Profile Saved.", Toast.LENGTH_SHORT).show();
-//                    }
-//                }else {
-//                    int id = 2;
-//                    User user1 = new User(id, name, email, imageToStore);
-//                    if(db.updateUser(user1)){
-//                        Toast.makeText(Profile.this, "profile saved.", Toast.LENGTH_SHORT).show();
-//                    }else{
-//                        Toast.makeText(Profile.this, "not profile saved.", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
             }
         });
 

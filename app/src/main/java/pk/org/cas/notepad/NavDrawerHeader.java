@@ -11,9 +11,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.List;
+
 public class NavDrawerHeader extends AppCompatActivity {
     ImageView ivPicture;
     TextView tvUserName, tvEmail;
+    DB db = DB.getInstance(this);
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -24,13 +27,11 @@ public class NavDrawerHeader extends AppCompatActivity {
         tvUserName = findViewById(R.id.tvUsername);
         tvEmail = findViewById(R.id.tvEmail);
 
-        String name = getIntent().getStringExtra("name");
-        String email = getIntent().getStringExtra("email");
+    }
 
-        tvUserName.setText(name);
-        tvEmail.setText(email);
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
 
     }
 }

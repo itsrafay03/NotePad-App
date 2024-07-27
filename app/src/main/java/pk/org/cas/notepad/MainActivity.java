@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     TextView tvUserName, tvEmail;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+    SearchView searchView;
+    RelativeLayout rlMain;
+    List<Notes> notes;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -54,12 +60,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvMain);
         addNote = findViewById(R.id.fab_Add);
         ivlayout = findViewById(R.id.ivLayout);
+        searchView = findViewById(R.id.searchView);
+        rlMain = findViewById(R.id.rlMain);
         Toolbar toolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawerLayout);
         ivmenu = findViewById(R.id.ivMenu);
         navigationView = findViewById(R.id.navigationView);
+        notes = db.fetchNotes();
 
 
 
@@ -89,6 +98,20 @@ public class MainActivity extends AppCompatActivity {
                     isLinear = true;
 
                 }
+            }
+        });
+
+        // for searchView.
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return true;
             }
         });
 
@@ -148,34 +171,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         View headerView = navigationView.getHeaderView(0);
-        ivProfilePic = headerView.findViewById(R.id.ivProfilePhoto);
+        ivProfilePic = headerView.findViewById(R.id.ivPerson);
         tvUserName = headerView.findViewById(R.id.tvUsername);
         tvEmail = headerView.findViewById(R.id.tvEmail);
 
 
-        try {
 
-            List<User> users = db.fetchUsers();
+        List<User> users = db.fetchUsers();
+        if(users.size() > 0){
             User user = users.get(0);
             tvUserName.setText(user.getName());
             tvEmail.setText(user.getEmail());
             ivProfilePic.setImageBitmap(user.getProfilePic());
-        }catch (Exception ex){
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
 
-//        String name = db..getName().toString();
-//        String email = db.fetchLastUser().getEmail().toString();
-//        tvUserName.setText(name);
-//        tvEmail.setText(email);
-
-//        User user = db.fetchUser(1);
-//        tvUserName.setText(user.getName().toString());
-//        tvEmail.setText(user.getEmail().toString());
-
-
-
+//        User user = users.get(0);
+//        tvUserName.setText(user.getName());
+//        tvEmail.setText(user.getEmail());
+//        Toast.makeText(this, ""+user.getProfilePic(), Toast.LENGTH_LONG).show();
+//        ivProfilePic.setImageBitmap(user.getProfilePic());
+        invalidateOptionsMenu();
 
     }
 
@@ -198,10 +215,24 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("Title", notes.get(position).getTitle());
                 intent.putExtra("Note", notes.get(position).getNote());
                 startActivity(intent);
-
-                Toast.makeText(MainActivity.this, "Moving to Open note Activity.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    // Method for searchView.
+    public void filter(String newText){
+        List<Notes> filteredList = new ArrayList<>();
+        try{
+            for (Notes singlwNotes : notes){
+                if(singlwNotes.getTitle().toLowerCase().contains(newText.toLowerCase()) || singlwNotes.getNote().toLowerCase().contains(newText.toLowerCase())){
+                    filteredList.add(singlwNotes);
+                }
+            }
+            notesAdapter.filterList(filteredList);
+        }catch (Exception ex){
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -216,21 +247,35 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.light){
             recyclerView.setBackgroundResource(R.color.light);
+            rlMain.setBackgroundResource(R.color.light);
         }
         if(item.getItemId() == R.id.dark){
             recyclerView.setBackgroundResource(R.color.dark);
+            rlMain.setBackgroundResource(R.color.dark);
         }
         return true;
     }
 
 
-    public static void openDrawer(DrawerLayout drawerLayout){
+    public void openDrawer(DrawerLayout drawerLayout){
         drawerLayout.openDrawer(GravityCompat.START);
+        updateHeaderData();
     }
 
-    public static void closeDrawer(DrawerLayout drawerLayout){
+
+    public void closeDrawer(DrawerLayout drawerLayout){
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    public void updateHeaderData(){
+        List<User> users = db.fetchUsers();
+        if(users.size() > 0){
+            User user = users.get(0);
+            tvUserName.setText(user.getName());
+            tvEmail.setText(user.getEmail());
+            ivProfilePic.setImageBitmap(user.getProfilePic());
         }
     }
 

@@ -17,9 +17,7 @@ import java.util.List;
 public class DB extends SQLiteOpenHelper {
     private static DB instance;
     public static final String DB_NAME = "NOTEPAD";
-    public static final int DB_VERSION = 13;
-
-
+    public static final int DB_VERSION = 20;
 
 
     private DB(Context context){
@@ -182,33 +180,6 @@ public class DB extends SQLiteOpenHelper {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Crude Operations of User.
     public boolean insertUser(User user){
         SQLiteDatabase db = getWritableDatabase();
@@ -217,12 +188,6 @@ public class DB extends SQLiteOpenHelper {
         contentValues.put(User.COL_EMAIL, user.getEmail());
         contentValues.put(User.COL_PROFILE_PIC, getBytes(user.getProfilePic()));
 
-
-//        Bitmap imageToStoreBitmap = user.getProfilePic();
-//        byteArrayOutputStream = new ByteArrayOutputStream();
-//        imageToStoreBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-//        imageInBytes = byteArrayOutputStream.toByteArray();
-//        contentValues.put(User.COL_PROFILE_PIC, imageInBytes);
         long rowID;
         try {
             rowID = db.insert(User.TABLE_NAME, null, contentValues);
@@ -239,11 +204,6 @@ public class DB extends SQLiteOpenHelper {
         contentValues.put(User.COL_EMAIL, user.getEmail());
         contentValues.put(User.COL_PROFILE_PIC, getBytes(user.getProfilePic()));
 
-//        Bitmap imageToStoreBitmap = user.getProfilePic();
-//        byteArrayOutputStream = new ByteArrayOutputStream();
-//        imageToStoreBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-//        imageInBytes = byteArrayOutputStream.toByteArray();
-//        contentValues.put(User.COL_PROFILE_PIC, imageInBytes);
         long rowID;
         try{
             rowID = db.update(User.TABLE_NAME, contentValues, User.COL_USER_ID+"= ?", new String[]{String.valueOf(user.getUserId())});
@@ -286,25 +246,6 @@ public class DB extends SQLiteOpenHelper {
         return users;
     }
 
-    @SuppressLint("Range")
-    public User fetchUser(int userId){
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery(User.SELECT_ALL_USERS, null);
-        User user = new User();
-        if(cursor.moveToNext()){
-            do{
-                int id = cursor.getInt(cursor.getColumnIndex(User.COL_USER_ID));
-                if(id == userId){
-                    user.setName(cursor.getString(cursor.getColumnIndex(User.COL_NAME)));
-                    user.setEmail(cursor.getString(cursor.getColumnIndex(User.COL_NAME)));
-                    user.setProfilePic(getImage(cursor.getBlob(cursor.getColumnIndex(User.COL_PROFILE_PIC))));
-
-                }
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        return user;
-    }
 
     // convert from bitmap to byte array
     public static byte[] getBytes(Bitmap bitmap) {
@@ -312,9 +253,9 @@ public class DB extends SQLiteOpenHelper {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
+
     // convert from byte array to bitmap
     public static Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
-
 }
