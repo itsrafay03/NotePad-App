@@ -49,6 +49,7 @@ public class Profile extends AppCompatActivity {
         btnAddPic = findViewById(R.id.btnAddPic);
         DB db = DB.getInstance(this);
 
+
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -149,8 +149,6 @@ public class OpenNote extends AppCompatActivity {
                             Toast.makeText(OpenNote.this, "Note is Added back to MainHome", Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                     isNotFavourite = true;
                 }
             }
