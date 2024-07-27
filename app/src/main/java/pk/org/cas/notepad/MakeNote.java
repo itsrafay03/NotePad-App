@@ -38,7 +38,7 @@ public class MakeNote extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                Toast.makeText(MakeNote.this, "BaCK", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MakeNote.this, "BaCK", Toast.LENGTH_SHORT).show();
             }
         });
 
