@@ -17,7 +17,7 @@ import java.util.List;
 public class DB extends SQLiteOpenHelper {
     private static DB instance;
     public static final String DB_NAME = "NOTEPAD";
-    public static final int DB_VERSION = 29;
+    public static final int DB_VERSION = 31;
 
     private DB(Context context){
         super(context, DB_NAME, null, DB_VERSION);
@@ -59,6 +59,7 @@ public class DB extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Notes.COL_TITLE, note.getTitle());
         contentValues.put(Notes.COL_NOTE, note.getNote());
+        contentValues.put(Notes.COL_DATE, note.getDate());
         long rowID;
         try {
             rowID = db.insert(Notes.TABLE_NAME, null, contentValues);
@@ -73,6 +74,7 @@ public class DB extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Notes.COL_TITLE, note.getTitle());
         contentValues.put(Notes.COL_NOTE, note.getNote());
+        contentValues.put(Notes.COL_DATE, note.getDate());
         long rowID;
         try{
             rowID = db.update(Notes.TABLE_NAME, contentValues, Notes.COL_NOTE_ID+"= ?", new String[]{String.valueOf(note.getNoteId())});
@@ -106,6 +108,8 @@ public class DB extends SQLiteOpenHelper {
                 note.setTitle(cursor.getString(index));
                 index = cursor.getColumnIndex(Notes.COL_NOTE);
                 note.setNote(cursor.getString(index));
+                index = cursor.getColumnIndex(Notes.COL_DATE);
+                note.setDate(cursor.getString(index));
                 notes.add(note);
             }while (cursor.moveToNext());
         }

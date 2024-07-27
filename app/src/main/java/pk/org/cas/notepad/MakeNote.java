@@ -47,7 +47,9 @@ public class MakeNote extends AppCompatActivity {
             public void onClick(View view) {
                 String title = String.valueOf(etTitle.getText());
                 String note = String.valueOf(etNote.getText());
-                Notes note1 = new Notes(title, note);
+                DateFormat df = new SimpleDateFormat("HH:mm:ss a, dd/MM/yyyy", Locale.getDefault());
+                String currentDateAndTime = df.format(new Date());
+                Notes note1 = new Notes(title, note, currentDateAndTime);
                 db.insertNote(note1);
 
 

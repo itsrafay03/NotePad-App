@@ -21,7 +21,7 @@ public class Notes {
     public static final String COL_NOTE = "Note";
     public static final String COL_DATE = "Date";
 
-    public static final String CREATE_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT)", TABLE_NAME, COL_NOTE_ID, COL_TITLE, COL_NOTE);
+    public static final String CREATE_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT, %s TEXT)", TABLE_NAME, COL_NOTE_ID, COL_TITLE, COL_NOTE, COL_DATE);
     public static final String DROP_TABLE = "DROP TABLE IF EXISTS "+TABLE_NAME;
     public static final String SELECT_ALL_NOTES = "SELECT * FROM "+TABLE_NAME;
 
@@ -41,6 +41,13 @@ public class Notes {
     }
 
     public Notes(String title, String note, String date) {
+        this.title = title;
+        this.note = note;
+        this.date = date;
+    }
+
+    public Notes(int noteId, String title, String note, String date) {
+        this.noteId = noteId;
         this.title = title;
         this.note = note;
         this.date = date;

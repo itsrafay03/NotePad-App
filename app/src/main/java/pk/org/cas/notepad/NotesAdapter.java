@@ -45,9 +45,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         holder.tvTitle.setText(String.valueOf(note.getTitle()));
         holder.tvNote.setText(String.valueOf(note.getNote()));
 
-        DateFormat df = new SimpleDateFormat("HH:mm:ss a, dd/MM/yyyy", Locale.getDefault());
-        String currentDateAndTime = df.format(new Date());
-        holder.tvDate.setText(currentDateAndTime);
+//        DateFormat df = new SimpleDateFormat("HH:mm:ss a, dd/MM/yyyy", Locale.getDefault());
+//        String currentDateAndTime = df.format(new Date());
+        holder.tvDate.setText(String.valueOf(note.getDate()));
 
     }
 

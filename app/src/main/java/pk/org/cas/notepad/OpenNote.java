@@ -107,13 +107,10 @@ public class OpenNote extends AppCompatActivity {
                 int id = (notes.get(position).getNoteId());
                 String title = String.valueOf(etOpen_Title.getText());
                 String note = String.valueOf(etOpen_Note.getText());
-                Notes notes1 = new Notes(id,title, note);
+                DateFormat df = new SimpleDateFormat("HH:mm:ss a, dd/MM/yyyy", Locale.getDefault());
+                String currentDateAndTime = df.format(new Date());
+                Notes notes1 = new Notes(id,title, note, currentDateAndTime);
                 if (db.updateNote(notes1)){
-                    notesAdapter.notifyDataSetChanged();
-                    notesAdapter.notifyItemChanged(position);
-                    DateFormat df = new SimpleDateFormat("HH:mm:ss a, dd/MM/yyyy", Locale.getDefault());
-                    String currentDateAndTime = df.format(new Date());
-                    notes1.setDate(currentDateAndTime);
                     finish();
                     Toast.makeText(OpenNote.this, "Note Updated", Toast.LENGTH_SHORT).show();
                 }
