@@ -32,10 +32,7 @@ public class FavouriteNotes extends AppCompatActivity {
         setContentView(R.layout.activity_favourite_notes);
         rvFav = findViewById(R.id.rvFav);
         ivBack = findViewById(R.id.ivBackFav);
-
-
         refreshFavRecyclerView();
-
 
 
         ivBack.setOnClickListener(new View.OnClickListener() {
