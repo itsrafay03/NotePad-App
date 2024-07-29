@@ -79,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, MakeNote.class);
                 startActivity(intent);
-//                Toast.makeText(MainActivity.this, "Moving to Make note Activity.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "From Cas.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Thora or Dhiyan do", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "or Dhiyan do", Toast.LENGTH_SHORT).show();
             }
         });
 
