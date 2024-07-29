@@ -9,15 +9,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.ContactsContract;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DB extends SQLiteOpenHelper {
+    static Context context;
     private static DB instance;
     public static final String DB_NAME = "NOTEPAD";
-    public static final int DB_VERSION = 31;
+    public static final int DB_VERSION = 42;
 
     private DB(Context context){
         super(context, DB_NAME, null, DB_VERSION);
@@ -49,7 +51,6 @@ public class DB extends SQLiteOpenHelper {
 
             db.execSQL(Favourite.DROP_TABLE);
             db.execSQL(Favourite.CREATE_TABLE);
-
         }
     }
 
@@ -182,6 +183,7 @@ public class DB extends SQLiteOpenHelper {
 
 
 
+    
 
     // Crude Operations of User.
     public boolean insertUser(User user){
@@ -252,13 +254,34 @@ public class DB extends SQLiteOpenHelper {
 
     // convert from bitmap to byte array
     public static byte[] getBytes(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
+        return compressImage(bitmap, 1100, 1100, 1200000);
+
     }
 
     // convert from byte array to bitmap
     public static Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
+    public static byte[] compressImage(Bitmap image, int maxWidth, int maxHeight, int maxSizeInBytes) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float scale = Math.min((float) maxWidth / width, (float) maxHeight / height);
+        int newWidth = Math.round(width * scale);
+        int newHeight = Math.round(height * scale);
+
+        Bitmap resizedImage = Bitmap.createScaledBitmap(image, newWidth, newHeight, false);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        resizedImage.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+        while (outputStream.toByteArray().length > maxSizeInBytes) {
+            outputStream.reset();
+            resizedImage.compress(Bitmap.CompressFormat.JPEG, 50, outputStream); // Reduce quality by 50%
+        }
+
+        byte[] compressedData = outputStream.toByteArray();
+        return compressedData;
     }
 }
