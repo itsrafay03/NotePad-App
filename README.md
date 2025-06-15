@@ -75,3 +75,30 @@ Follow these steps to get a local copy up and running.
     -   Click the **'Run'** button (▶️) in the top toolbar or press `Shift` + `F10`.
 
 ## 📂 Repository Structure
+NotePad-App/
+├── app/
+│ ├── src/main/
+│ │ ├── java/com/example/notepad_app/
+│ │ │ ├── AddNotesActivity.java # Activity for adding new notes
+│ │ │ ├── MainActivity.java # Main screen, displays all notes
+│ │ │ ├── MyDatabaseHelper.java # Manages SQLite database operations
+│ │ │ ├── NotesAdapter.java # Adapter for the RecyclerView
+│ │ │ └── UpdateNotesActivity.java # Activity for updating/deleting notes
+│ │ └── res/
+│ │ ├── layout/ # XML layout files for activities
+│ │ ├── menu/ # XML menu definition files
+│ │ └── ... # Other resource folders
+└── ... # Gradle and config files
+## 🤝 Contributing
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/itsrafay03/NotePad-App/issues) if you want to contribute.
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+
+## 📧 Contact
+Rafay - [@itsrafay03](https://github.com/itsrafay03)
+
+Project Link: [https://github.com/itsrafay03/NotePad-App](https://github.com/itsrafay03/NotePad-App)
